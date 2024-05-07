@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  rabbit:
+  dbprods:
+  dborders:
+  order-service:
+  product-service:
+volumes:
