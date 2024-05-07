@@ -7,13 +7,13 @@ app.use(express.json())
 
 app.use('/products', productRoutes)
 
-mongoose.connect('mongodb://localhost:27017/dbproducts').then(() => {
+mongoose.connect(process.env.url_mongoose).then(() => {
     console.log('Connected to mongo')
 }).catch((err) => {
     console.log('Unable to connect to Mongo')
 })
 
-app.listen(3000, (err) => {
+app.listen(process.env.port, (err) => {
     if(!err)
         console.log('Server started at 3000')
     else

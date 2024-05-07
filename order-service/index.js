@@ -5,7 +5,7 @@ import orderSchema from './models/Order.js'
 
 const app = express()
 
-mongoose.connect('mongodb://localhost:27017/dborders')
+mongoose.connect(process.env.url_mongoose)
     .then(() => {
         console.log('Connected to Mongo')
     }).catch((err) => {
@@ -13,11 +13,11 @@ mongoose.connect('mongodb://localhost:27017/dborders')
     })
 
 var connection, channel;
-const q1 = 'order-service-queue'
-const q2 = 'produit-service-queue'
+const q1 = process.env.q1
+const q2 = process.env.q2
 
 const connectRabbitMQ = async () => {
-    const ch = 'amqp://guest:guest@localhost:5672'
+    const ch = process.env.url_rabbit
     connection = await amqp.connect(ch)
     channel = await connection.createChannel()
     channel.assertQueue(q1)
