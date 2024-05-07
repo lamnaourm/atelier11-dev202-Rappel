@@ -34,6 +34,8 @@ connectRabbitMQ().then(() => {
         const order = { produits, total }
         orderSchema.create(order).then(() => {
             console.log('Order cree')
+
+            channel.sendToQueue(q2, Buffer.from(JSON.stringify(order)))
         })
             .catch((err) => {
                 console.log('Erreur')
