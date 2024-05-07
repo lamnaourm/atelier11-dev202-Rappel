@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose");
+import {Schema} from "mongoose";
+import {model}  from "mongoose";
 
 const ProductSchema = Schema({
     name:{type:String, required:true, unique:true},

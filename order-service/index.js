@@ -1,5 +1,7 @@
 import express from 'express'
+import amqp from 'amqplib'
 import mongoose from 'mongoose'
+import orderSchema from './models/Order.js'
 
 const app = express()
 
@@ -10,8 +12,38 @@ mongoose.connect('mongodb://localhost:27017/dborders')
         console.log('Unable to Connect to Mongo')
     })
 
-app.listen(3001, (err) =>{
-    if(err)
+var connection, channel;
+const q1 = 'order-service-queue'
+const q2 = 'produit-service-queue'
+
+const connectRabbitMQ = async () => {
+    const ch = 'amqp://guest:guest@localhost:5672'
+    connection = await amqp.connect(ch)
+    channel = await connection.createChannel()
+    channel.assertQueue(q1)
+    channel.assertQueue(q2)
+}
+
+connectRabbitMQ().then(() => {
+    console.log('Connected to rabbit')
+
+    channel.consume(q1, (data) => {
+        const produits = JSON.parse(data.content.toString())
+        const total = produits.reduce((som, p) => som + p.price, 0)
+
+        const order = { produits, total }
+        orderSchema.create(order).then(() => {
+            console.log('Order cree')
+        })
+            .catch((err) => {
+                console.log('Erreur')
+            })
+
+    })
+})
+
+app.listen(3001, (err) => {
+    if (err)
         console.log('Unable to start server')
     else
         console.log('server started at 3000')
