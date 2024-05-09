@@ -27,6 +27,7 @@ services:
       - url_rabbit=amqp://guest:guest@rabbit:5672
       - q1=order-service-queue
       - q2=produit-service-queue
+      - q3=notification-service-queue
     depends_on:
       - rabbit
       - dborders
@@ -43,6 +44,16 @@ services:
     depends_on:
       - rabbit
       - dbprods
+  notification-service:
+    build: ./notification-service
+    ports:
+      - 3003:3000
+    environment:
+      - port=3000
+      - url_rabbit=amqp://guest:guest@rabbit:5672
+      - q3=notification-service-queue
+    depends_on:
+      - rabbit
 volumes:
   dbproducts:
   dborders:

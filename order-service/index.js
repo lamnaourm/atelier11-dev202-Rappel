@@ -15,6 +15,7 @@ mongoose.connect(process.env.url_mongoose)
 var connection, channel;
 const q1 = process.env.q1
 const q2 = process.env.q2
+const q3 = process.env.q3
 
 const connectRabbitMQ = async () => {
     const ch = process.env.url_rabbit
@@ -22,6 +23,7 @@ const connectRabbitMQ = async () => {
     channel = await connection.createChannel()
     channel.assertQueue(q1)
     channel.assertQueue(q2)
+    channel.assertQueue(q3)
 }
 
 connectRabbitMQ().then(() => {
@@ -36,6 +38,7 @@ connectRabbitMQ().then(() => {
             console.log('Order cree')
 
             channel.sendToQueue(q2, Buffer.from(JSON.stringify(order)))
+            channel.sendToQueue(q3, Buffer.from(JSON.stringify(order)))
         })
             .catch((err) => {
                 console.log('Erreur')
