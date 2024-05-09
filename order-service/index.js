@@ -44,7 +44,7 @@ connectRabbitMQ().then(() => {
     })
 })
 
-app.listen(3001, (err) => {
+app.listen(process.env.port, (err) => {
     if (err)
         console.log('Unable to start server')
     else

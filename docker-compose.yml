@@ -42,7 +42,7 @@ services:
       - q2=produit-service-queue
     depends_on:
       - rabbit
-      - dborders
+      - dbprods
 volumes:
   dbproducts:
   dborders:
